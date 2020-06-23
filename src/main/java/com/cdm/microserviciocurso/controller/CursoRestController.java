@@ -75,4 +75,10 @@ public class CursoRestController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.serviceApi.save(curso));
     }
 
+    @GetMapping("/alumno/{id}")
+    public ResponseEntity<?> buscarPorAlumnoId(@PathVariable Long id){
+        Curso curso = serviceApi.findCursoByAlumnoId(id);
+        return ResponseEntity.ok(curso);
+    }
+
 }
