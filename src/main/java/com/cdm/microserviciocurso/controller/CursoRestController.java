@@ -1,5 +1,6 @@
 package com.cdm.microserviciocurso.controller;
 
+import com.cdm.microserviciocurso.models.Alumno;
 import com.cdm.microserviciocurso.models.Curso;
 import com.cdm.microserviciocurso.services.CursoServiceAPI;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class CursoRestController {
@@ -40,6 +42,37 @@ public class CursoRestController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(obj, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/asignar-alumnos")
+    public ResponseEntity<?> asignarAlumnos(
+            @RequestBody List<Alumno> alumnos,
+            @PathVariable Long id
+    ){
+        Curso curso = serviceApi.get(id);
+        if (curso == null){
+            return ResponseEntity.notFound().build();
+        }
+
+        alumnos.forEach(curso::addAlumno);
+
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.serviceApi.save(curso));
+    }
+
+    @PutMapping("/{id}/eliminar-alumno")
+    public ResponseEntity<?> eliminarAlumno(
+            @RequestBody Alumno alumno,
+            @PathVariable Long id
+    ){
+        Curso curso = serviceApi.get(id);
+        if (curso == null){
+            return ResponseEntity.notFound().build();
+        }
+
+        curso.removeAlumno(alumno);
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.serviceApi.save(curso));
     }
 
 }

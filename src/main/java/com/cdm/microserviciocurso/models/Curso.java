@@ -16,7 +16,7 @@ public class Curso {
     @Column
     @Temporal(TemporalType.TIMESTAMP)
     private Date createAt;
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
     private List<Alumno> alumnos;
 
     @PrePersist
