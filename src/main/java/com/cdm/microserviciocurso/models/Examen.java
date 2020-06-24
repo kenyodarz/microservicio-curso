@@ -3,6 +3,7 @@ package com.cdm.microserviciocurso.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +18,7 @@ public class Examen {
     private Long idExamen;
 
     @Column
+    @NotNull
     private String nombre;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -28,7 +30,11 @@ public class Examen {
     private List<Pregunta> preguntas;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
     private Asignatura asignatura;
+
+    @Transient
+    private boolean respondido;
 
     public Examen() {
         this.preguntas = new ArrayList<>();
@@ -70,6 +76,10 @@ public class Examen {
     public Asignatura getAsignatura() { return asignatura; }
 
     public void setAsignatura(Asignatura asignatura) { this.asignatura = asignatura; }
+
+    public boolean isRespondido() { return respondido; }
+
+    public void setRespondido(boolean respondido) { this.respondido = respondido; }
 
     public void setPreguntas(List<Pregunta> preguntas) {
         this.preguntas.clear();
