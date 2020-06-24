@@ -1,8 +1,12 @@
 package com.cdm.microserviciocurso.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
@@ -12,19 +16,32 @@ public class Alumno {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idAlumnos;
     @Column
-    private String Nombre;
+    @NotNull
+    private String nombre;
     @Column
-    private String Apellido;
+    @NotNull
+    private String apellido;
     @Column
+    @NotNull
+    @Email
     private String email;
     @Column
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date createAt;
 
+    @Lob
+    @Type(type = "org.hibernate.type.BinaryType")
+    @JsonIgnore
+    private byte[] foto;
+
     @PrePersist
     public void fechaCreacion(){
         this.createAt = new Date();
+    }
+
+    public Integer getFotoHashCode(){
+        return (this.foto != null) ? this.foto.hashCode() : null;
     }
 
     public Long getIdAlumnos() {
@@ -36,19 +53,19 @@ public class Alumno {
     }
 
     public String getNombre() {
-        return Nombre;
+        return nombre;
     }
 
     public void setNombre(String nombre) {
-        Nombre = nombre;
+        this.nombre = nombre;
     }
 
     public String getApellido() {
-        return Apellido;
+        return apellido;
     }
 
     public void setApellido(String apellido) {
-        Apellido = apellido;
+        this.apellido = apellido;
     }
 
     public String getEmail() { return email; }
@@ -62,6 +79,10 @@ public class Alumno {
     public void setCreateAt(Date createAt) {
         this.createAt = createAt;
     }
+
+    public byte[] getFoto() { return foto; }
+
+    public void setFoto(byte[] foto) { this.foto = foto; }
 
     @Override
     public boolean equals(Object obj) {
